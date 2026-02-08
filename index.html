@@ -1420,10 +1420,20 @@ cards.forEach(c => observer.observe(c));
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.hero-dot');
   const progress = document.getElementById('heroProgress');
+  const carousel = document.getElementById('heroCarousel'); // 追加
   let current = 0;
   const total = slides.length;
   const interval = 5000;
   let timer;
+
+  // 画像の高さに合わせてスライダー枠を調整する関数（追加）
+  function adjustHeight() {
+    const activeImg = slides[current].querySelector('img');
+    if (activeImg && carousel) {
+      // 画像の実際の高さを取得して、カルーセルの高さに適用する
+      carousel.style.height = activeImg.offsetHeight + 'px';
+    }
+  }
 
   function goTo(index) {
     slides[current].classList.remove('active');
