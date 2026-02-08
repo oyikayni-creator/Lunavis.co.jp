@@ -1441,6 +1441,10 @@ cards.forEach(c => observer.observe(c));
     current = index % total;
     slides[current].classList.add('active');
     dots[current].classList.add('active');
+    
+    // スライドが切り替わったら高さを再調整（追加）
+    adjustHeight();
+
     progress.style.animation = 'none';
     progress.offsetHeight;
     progress.style.animation = `progressBar ${interval}ms linear`;
@@ -1453,6 +1457,14 @@ cards.forEach(c => observer.observe(c));
     progress.style.animation = `progressBar ${interval}ms linear infinite`;
   }
 
+  // 初回読み込み時とウィンドウサイズ変更時に高さを合わせる（追加）
+  window.addEventListener('load', adjustHeight);
+  window.addEventListener('resize', adjustHeight);
+  // 画像が読み込み完了した際にも実行
+  slides.forEach(slide => {
+    slide.querySelector('img').addEventListener('load', adjustHeight);
+  });
+
   dots.forEach(dot => {
     dot.addEventListener('click', () => {
       clearInterval(timer);
@@ -1461,8 +1473,7 @@ cards.forEach(c => observer.observe(c));
     });
   });
 
-  // Swipe support
-  const carousel = document.getElementById('heroCarousel');
+  // Swipe support (ここは変更なし)
   let touchStartX = 0;
   let touchStartY = 0;
   let touchEndX = 0;
@@ -1498,7 +1509,6 @@ cards.forEach(c => observer.observe(c));
     }
   }, { passive: true });
 
-  // Prevent link navigation during swipe
   carousel.addEventListener('click', (e) => {
     if (isSwiping) {
       e.preventDefault();
@@ -1506,8 +1516,10 @@ cards.forEach(c => observer.observe(c));
   }, true);
 
   startTimer();
+  // 初回起動時にも高さを合わせる
+  setTimeout(adjustHeight, 100);
 })();
-
+  
 // Contact form
 function handleSubmit() {
   const name = document.getElementById('contact-name');
